@@ -1,3 +1,4 @@
+"use client"
 import { Song } from "@/types";
 import MediaItem from "./MediaItem";
 import LikeButton from "./LikeButton";
@@ -22,6 +23,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ songs }) => {
       </div>
     );
   }
+  console.log(songs)
   return (
     <div className="flex flex-col gap-y-2 w-full px-6">
       {songs.map((song) => (

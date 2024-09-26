@@ -11,11 +11,13 @@ interface LikeButtonProps {
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({ songId }) => {
+  console.log(songId)
   const router = useRouter();
   const { supabaseClient } = useSessionContext();
   const authModal = useAuthModal();
   const { user } = useUser();
   const [isLiked, setIsLiked] = useState(false);
+  const [loading, setLoading] = useState(false); // Add a loading state
 
   useEffect(() => {
     if (!user?.id) {
@@ -38,43 +40,58 @@ const LikeButton: React.FC<LikeButtonProps> = ({ songId }) => {
 
     fetchData();
   }, [songId, supabaseClient, user?.id]);
-    const Icon = isLiked ? AiFillHeart : AiOutlineHeart;
-     const handleLike = async () => {
-       if (!user) {
-         return authModal.onOpen();
-       }
 
-       if (isLiked) {
-         const { error } = await supabaseClient
-           .from("liked_songs")
-           .delete()
-           .eq("user_id", user.id)
-           .eq("song_id", songId);
+  const Icon = isLiked ? AiFillHeart : AiOutlineHeart;
 
-         if (error) {
-           toast.error(error.message);
-         } else {
-           setIsLiked(false);
-         }
-       } else {
-         const { error } = await supabaseClient.from("liked_songs").insert({
-           song_id: songId,
-           user_id: user.id,
-         });
+  const handleLike = async () => {
+    if (!user) {
+      return authModal.onOpen();
+    }
 
-         if (error) {
-           toast.error(error.message);
-         } else {
-           setIsLiked(true);
-           toast.success("Liked!");
-         }
-       }
+    if (loading) return; // Prevent multiple requests
+    setLoading(true); // Start loading
 
-       router.refresh();
-     };
+    if (isLiked) {
+      // Unlike the song
+      const { error } = await supabaseClient
+        .from("liked_songs")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("song_id", songId);
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        setIsLiked(false);
+        toast.success("Removed from liked songs.");
+      }
+    } else {
+      // Like the song (only if not already liked)
+      const { error } = await supabaseClient
+        .from("liked_songs")
+        .insert({ song_id: songId, user_id: user.id });
+
+      if (error) {
+        if (error.code === "23505") {
+          // This is the error for duplicate key violations
+          toast.error("You've already liked this song.");
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        setIsLiked(true);
+        toast.success("Liked!");
+      }
+    }
+
+    setLoading(false); // Stop loading
+    router.refresh();
+  };
+
   return (
     <button
       onClick={handleLike}
+      disabled={loading} // Disable button while loading
       className="
         hover:opacity-75
         transition
