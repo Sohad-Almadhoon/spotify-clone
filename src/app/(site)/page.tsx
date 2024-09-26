@@ -3,8 +3,8 @@ import { getSongs } from "@/actions/getSongs";
 import Header from "@/src/components/Header";
 import ListItem from "@/src/components/ListItem";
 import PageContent from "@/src/components/PageContent";
-import React from "react";
 
+export const revalidate = 0;
 const Home = async() => {
    const songs = await getSongs();
   return (
