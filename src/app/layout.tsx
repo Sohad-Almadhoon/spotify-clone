@@ -5,17 +5,19 @@ import { SupabaseProvider } from "../providers/SupabaseProvider";
 import Sidebar from "../components/Sidebar";
 import { ModalProvider } from "../providers/ModalProvider";
 import { ToasterProvider } from "../providers/ToasterProvider";
-
+import { getSongsByUserId } from "@/actions/getSongsByUserId";
+export const revalidate = 0;
 export const metadata = {
   title: "Spotify Clone",
   description: "Listen to music!",
 };
 const font = Figtree({ subsets: ["latin"] });
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userSongs = await getSongsByUserId();
   return (
     <html lang="en">
       <body className={font.className}>
@@ -23,7 +25,7 @@ export default function RootLayout({
         <SupabaseProvider>
           <UserProvider>
             <ModalProvider products={[]} />
-            <Sidebar>{children}</Sidebar>
+            <Sidebar songs={userSongs}>{children}</Sidebar>
           </UserProvider>
         </SupabaseProvider>
       </body>
