@@ -1,29 +1,37 @@
 import { Song } from "@/types";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers"
+import { cookies } from "next/headers";
 
 export const getSongsByUserId = async (): Promise<Song[]> => {
     const supabase = createServerComponentClient({
-        cookies: cookies
+        cookies
     });
 
-   const { 
-    data: sessionData, 
-    error: sessionError } = await supabase.auth.getSession();
+    // Use supabase.auth.getUser() to securely authenticate the user
+    const { data: userData, error: userError } = await supabase.auth.getUser();
 
-    if (sessionError) {
-        console.log(sessionError.message)
+    if (userError) {
+        console.log(userError.message);
         return [];
     }
 
+    if (!userData || !userData.user) {
+        console.log('No authenticated user found');
+        return [];
+    }
+
+    // Fetch songs by user_id using the authenticated user's ID
     const { data, error } = await supabase
-    .from('songs')
-    .select('*')
-    .eq('user_id', sessionData.session?.user.id)
-    .order('created_at', {ascending: false});
+        .from('songs')
+        .select('*')
+        .eq('user_id', userData.user.id)
+        .order('created_at', { ascending: false });
 
     if (error) {
-        console.log(error.message)
+        console.log(error.message);
+        return [];
     }
-return (data as any || [])
-}
+
+    // Return the songs data or an empty array if no data
+    return (data as Song[] || []);
+};
