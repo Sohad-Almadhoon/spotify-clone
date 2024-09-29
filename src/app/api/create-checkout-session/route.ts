@@ -1,43 +1,52 @@
+import { getURL } from '@/src/libs/helpers';
+import { stripe } from '@/src/libs/stripe';
+import { createOrRetrieveCustomer } from '@/src/libs/supabaseAdmin';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-import { stripe } from '@/src/libs/stripe';
-import { getURL } from '@/src/libs/helpers';
-import { createOrRetrieveCustomer } from '@/src/libs/supabaseAdmin';
 
-export async function POST() {
+
+export async function POST(request: Request) {
+  const { price, quantity = 1, metadata = {} } = await request.json();
+
   try {
     const supabase = createRouteHandlerClient({
       cookies,
     });
-
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Check if the user exists and has valid id and email
-    if (!user || !user.id || !user.email) {
-      throw new Error('User not found or invalid user data');
-    }
-
     const customer = await createOrRetrieveCustomer({
-      uuid: user.id,
-      email: user.email,
+      uuid: user?.id || '',
+      email: user?.email || '',
     });
-
-    if (!customer) {
-      throw new Error('Customer not found or could not be created');
-    }
-
-    const { url } = await stripe.billingPortal.sessions.create({
+    /* @ts-ignore*/
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      billing_address_collection: 'required',
       customer,
-      return_url: `${getURL()}/account`,
+      line_items: [
+        {
+          price: price.id,
+          quantity,
+        },
+      ],
+      mode: 'subscription',
+      allow_promotion_codes: true,
+      subscription_data: {
+        trial_from_plan: true,
+        metadata,
+      },
+      success_url: `${getURL()}account`,
+      cancel_url: `${getURL()}`,
     });
-
-    return NextResponse.json({ url });
+    console.log(session.id , "Session")
+    return NextResponse.json({ sessionId: session.id });
   } catch (error: any) {
-    console.log('Error:', error.message);
+    console.log(error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }

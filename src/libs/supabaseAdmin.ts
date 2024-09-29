@@ -10,9 +10,8 @@ import { toDateTime } from './helpers';
 export const supabaseAdmin =
   createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEYY as string
+    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY as string
   )
-
 
 
 const upsertProductRecord = async (product: Stripe.Product) => {
@@ -24,16 +23,23 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     image: product.images?.[0] ?? null,
     metadata: product.metadata,
   };
-
   const { error } = await supabaseAdmin.from('products').upsert([productData]);
   if (error) throw error;
-  console.log(`Product inserted/updated: ${product.id}`);
 };
 
 const upsertPriceRecord = async (price: Stripe.Price) => {
+  // Check if price.product is an object and get the id if it's nested
+  const productId = typeof price.product === 'string'
+    ? price.product
+    : (price.product as Stripe.Product)?.id || '';
+
+  if (!productId) {
+    throw new Error('Product ID is missing or invalid.');
+  }
+
   const priceData: Price = {
     id: price.id,
-    product_id: typeof price.product === 'string' ? price.product : '',
+    product_id: productId,
     active: price.active,
     currency: price.currency,
     description: price.nickname ?? undefined,
@@ -46,9 +52,10 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
   };
 
   const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
+
   if (error) throw error;
-  console.log(`Price inserted/updated: ${price.id}`);
 };
+
 
 const createOrRetrieveCustomer = async ({ email, uuid }: { email: string; uuid: string }) => {
   const { data, error } = await supabaseAdmin
