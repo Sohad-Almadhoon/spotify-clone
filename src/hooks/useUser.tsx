@@ -35,15 +35,14 @@ export const MyUserContextProvider = (props: Props) => {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
-
   //* Define functions to get user details and subscription from Supabase
+ console.log(subscription)
   const getUserDetails = () => supabase.from('users').select('*').single();
   const getSubscription = () =>
     supabase
       .from('subscriptions')
       .select('*, prices(*, products(*))')
-      .in('status', ['trialing', 'active'])
-      .single();
+      .in('status', ['trialing', 'active']);
 
   //* Fetch user info
   useEffect(() => {
