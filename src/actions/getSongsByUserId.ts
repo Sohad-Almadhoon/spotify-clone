@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 
 export const getSongsByUserId = async (): Promise<Song[]> => {
     const supabase = createServerComponentClient({
-        cookies
+        cookies,
+        
     });
 
     // Use supabase.auth.getUser() to securely authenticate the user

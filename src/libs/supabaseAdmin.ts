@@ -1,4 +1,3 @@
-"use client"
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
@@ -11,7 +10,7 @@ import { toDateTime } from './helpers';
 export const supabaseAdmin =
   createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEYY as string
   )
 
 
