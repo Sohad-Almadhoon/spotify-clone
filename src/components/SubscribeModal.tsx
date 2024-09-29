@@ -57,8 +57,12 @@ const SubscribeModal: React.FC<subscribeModalProps> = ({ products }) => {
         data: { price },
       });
       const stripe = await getStripe();
-      console.log(stripe , "Stripe");
-      stripe?.redirectToCheckout({ sessionId });
+      if (stripe) {
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+        if (error) {
+          console.error("Error redirecting to Checkout:", error.message);
+        }
+      }
     } catch (error) {
       toast.error((error as Error)?.message);
     } finally {
