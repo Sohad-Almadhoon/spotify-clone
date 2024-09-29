@@ -9,14 +9,15 @@ export const getActiveProductsWithPrices = async (): Promise<ProductWithPrice[]>
 
   const { data, error } = await supabase
     .from('products')
-    .select('*, prices(*)')  // Remove filters for debugging
+    .select('*, prices(*)')
+    .eq('active', true)
+    .eq('prices.active', true)
+    .order('metadata->index')
+    .order('unit_amount', { foreignTable: 'prices' });
 
   if (error) {
-    console.error("Supabase error:", error.message);
-    return [];
+    console.log(error);
   }
 
-  console.log("Supabase data:", data);
-
-  return (data as ProductWithPrice[]) || [];
+  return (data as any) || [];
 };

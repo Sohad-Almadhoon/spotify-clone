@@ -1,11 +1,11 @@
 import Image from "next/image";
 
-import { getLikedSongs } from "@/actions/getLikedSongs";
+import { getLikedSongs } from "@/src/actions/getLikedSongs";
 import Header from "@/src/components/Header";
 import LikedContent from "@/src/components/LikedContent";
 
 export const revalidate = 0;
-const Liked = async() => {
+const Liked = async () => {
   const songs = await getLikedSongs();
   return (
     <div

@@ -5,9 +5,9 @@ import { SupabaseProvider } from "../providers/SupabaseProvider";
 import Sidebar from "../components/Sidebar";
 import { ModalProvider } from "../providers/ModalProvider";
 import { ToasterProvider } from "../providers/ToasterProvider";
-import { getSongsByUserId } from "@/actions/getSongsByUserId";
+import { getSongsByUserId } from "@/src/actions/getSongsByUserId";
 import Player from "../components/Player";
-import { getActiveProductsWithPrices } from "@/actions/getActiveProductsWithPrices";
+import { getActiveProductsWithPrices } from "../actions/getActiveProductsWithPrices";
 export const revalidate = 0;
 export const metadata = {
   title: "Spotify Clone",

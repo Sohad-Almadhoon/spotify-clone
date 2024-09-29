@@ -1,8 +1,8 @@
 "use client";
 
-import { useGetSongById } from "@/hooks/useGetSongById";
-import { useLoadSongUrl } from "@/hooks/useLoadSongUrl";
-import { usePlayer } from "@/hooks/usePlayer";
+import { useGetSongById } from "@/src/hooks/useGetSongById";
+import { useLoadSongUrl } from "@/src/hooks/useLoadSongUrl";
+import { usePlayer } from "@/src/hooks/usePlayer";
 import PlayerContent from "./PlayerContent";
 
 const Player = () => {
@@ -13,8 +13,8 @@ const Player = () => {
   //* Don't load player if you dont have the song, url or id
   if (!song || !songUrl || !player.activeId) {
     return null;
-    }
-    
+  }
+
   return (
     <div
       className="

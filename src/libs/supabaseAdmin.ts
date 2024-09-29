@@ -1,3 +1,4 @@
+"use client"
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
@@ -7,10 +8,13 @@ import { Price, Product } from '@/types';
 import { stripe } from './stripe';
 import { toDateTime } from './helpers';
 
-export const supabaseAdmin = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+export const supabaseAdmin =
+  createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+  )
+
+
 
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {

@@ -1,5 +1,5 @@
-import { useAuthModal } from "@/hooks/useAuthModal";
-import { useUser } from "@/hooks/useUser";
+import { useAuthModal } from "@/src/hooks/useAuthModal";
+import { useUser } from "@/src/hooks/useUser";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ interface LikeButtonProps {
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({ songId }) => {
-  console.log(songId)
+  console.log(songId);
   const router = useRouter();
   const { supabaseClient } = useSessionContext();
   const authModal = useAuthModal();

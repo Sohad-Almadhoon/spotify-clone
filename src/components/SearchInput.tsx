@@ -2,7 +2,7 @@
 
 import qs from "query-string";
 
-import useDebounce from "@/hooks/useDebounce";
+import useDebounce from "@/src/hooks/useDebounce";
 
 import { useRouter } from "next/navigation";
 

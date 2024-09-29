@@ -1,17 +1,16 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
+import { useSubscribeModal } from "@/src/hooks/useSubscribeModal";
+import { useUser } from "@/src/hooks/useUser";
 
-import { useSubscribeModal } from '@/hooks/useSubscribeModal';
-import { useUser } from '@/hooks/useUser';
-
-import { postData } from '@/libs/helpers';
-import Button from '@/src/components/Button';
+import { postData } from "@/src/libs/helpers";
+import Button from "@/src/components/Button";
 
 export const AccountContent = () => {
   const router = useRouter();
@@ -22,7 +21,7 @@ export const AccountContent = () => {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.replace('/');
+      router.replace("/");
     }
   }, []);
 
@@ -30,7 +29,7 @@ export const AccountContent = () => {
     setLoading(true);
     try {
       const { url, error } = await postData({
-        url: '/api/create-portal-link',
+        url: "/api/create-portal-link",
       });
       window.location.assign(url);
     } catch (error) {
@@ -53,13 +52,13 @@ export const AccountContent = () => {
       {subscription && (
         <div className="flex flex-col gap-y-4">
           <p>
-            You are currently on the <b>{subscription?.prices?.products?.name}</b> plan.
+            You are currently on the{" "}
+            <b>{subscription?.prices?.products?.name}</b> plan.
           </p>
           <Button
             onClick={redirectToCustomerPortal}
             disabled={loading || isLoading}
-            className="w-[300px]"
-          >
+            className="w-[300px]">
             Open customer portal
           </Button>
         </div>

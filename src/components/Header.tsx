@@ -7,8 +7,8 @@ import { HiHome } from "react-icons/hi";
 import { BiSearch } from "react-icons/bi";
 import { FaUserAlt } from "react-icons/fa";
 import Button from "./Button";
-import { useAuthModal } from "@/hooks/useAuthModal";
-import { useUser } from "@/hooks/useUser";
+import { useAuthModal } from "@/src/hooks/useAuthModal";
+import { useUser } from "@/src/hooks/useUser";
 import { toast } from "react-hot-toast";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 interface HeaderProps {

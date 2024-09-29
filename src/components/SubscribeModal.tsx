@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
-import { postData } from '@/libs/helpers';
-import { getStripe } from '@/libs/stripeClient';
+import { postData } from "@/src/libs/helpers";
+import { getStripe } from "@/src/libs/stripeClient";
 
-import { useUser } from '@/hooks/useUser';
+import { useUser } from "@/src/hooks/useUser";
 
-import { Price, ProductWithPrice } from '@/types';
+import { Price, ProductWithPrice } from "@/types";
 
-import { Modal } from './Modal';
-import  Button  from './Button';
-import { useSubscribeModal } from '@/hooks/useSubscribeModal';
+import { Modal } from "./Modal";
+import Button from "./Button";
+import { useSubscribeModal } from "@/src/hooks/useSubscribeModal";
 
 interface subscribeModalProps {
   products: ProductWithPrice[];
 }
 
 const formatPrice = (price: Price) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
     currency: price.currency,
     minimumFractionDigits: 0,
   }).format((price?.unit_amount || 0) / 100);
@@ -43,17 +43,17 @@ const SubscribeModal: React.FC<subscribeModalProps> = ({ products }) => {
 
     if (!user) {
       setPriceIdLoading(undefined);
-      return toast.error('Must be logged in to subscribe');
+      return toast.error("Must be logged in to subscribe");
     }
 
     if (subscription) {
       setPriceIdLoading(undefined);
-      return toast('You are already subscribed');
+      return toast("You are already subscribed");
     }
 
     try {
       const { sessionId } = await postData({
-        url: '/api/create-checkout-session',
+        url: "/api/create-checkout-session",
         data: { price },
       });
 
@@ -82,8 +82,9 @@ const SubscribeModal: React.FC<subscribeModalProps> = ({ products }) => {
               onClick={() => handleCheckout(price)}
               disabled={isLoading || price.id === priceIdLoading}
               className="mb-4"
-              key={price.id}
-            >{`Subscribe for ${formatPrice(price)} a ${price.interval}`}</Button>
+              key={price.id}>{`Subscribe for ${formatPrice(price)} a ${
+              price.interval
+            }`}</Button>
           ));
         })}
       </div>
@@ -99,8 +100,7 @@ const SubscribeModal: React.FC<subscribeModalProps> = ({ products }) => {
       title="Only for premium users"
       description="Listen to music with Spotify Premium"
       isOpen={subscribeModal.isOpen}
-      onChange={onChange}
-    >
+      onChange={onChange}>
       {content}
     </Modal>
   );

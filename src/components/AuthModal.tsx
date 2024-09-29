@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { useSessionContext, useSupabaseClient } from '@supabase/auth-helpers-react';
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
+import {
+  useSessionContext,
+  useSupabaseClient,
+} from "@supabase/auth-helpers-react";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
-import { Modal } from './Modal';
-import { useRouter } from 'next/navigation';
+import { Modal } from "./Modal";
+import { useRouter } from "next/navigation";
 
-import { useAuthModal } from '@/hooks/useAuthModal';
+import { useAuthModal } from "@/src/hooks/useAuthModal";
 
 export const AuthModal = () => {
   //* Initializes Supabase client, Next.js router and session context.
@@ -38,20 +41,19 @@ export const AuthModal = () => {
       title="Welcome back"
       description="Login into your account"
       isOpen={isOpen}
-      onChange={onChange}
-    >
+      onChange={onChange}>
       <Auth
         theme="dark"
         magicLink
-        providers={['github']}
+        providers={["github"]}
         supabaseClient={supabaseClient}
         appearance={{
           theme: ThemeSupa,
           variables: {
             default: {
               colors: {
-                brand: '#404040',
-                brandAccent: '#1DB954',
+                brand: "#404040",
+                brandAccent: "#1DB954",
               },
             },
           },

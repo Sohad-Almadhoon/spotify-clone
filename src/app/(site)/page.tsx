@@ -1,12 +1,11 @@
-
-import { getSongs } from "@/actions/getSongs";
+import { getSongs } from "@/src/actions/getSongs";
 import Header from "@/src/components/Header";
 import ListItem from "@/src/components/ListItem";
 import PageContent from "@/src/components/PageContent";
 
 export const revalidate = 0;
-const Home = async() => {
-   const songs = await getSongs();
+const Home = async () => {
+  const songs = await getSongs();
   return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-hidden">
       <Header>
