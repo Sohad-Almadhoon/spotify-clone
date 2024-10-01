@@ -15,6 +15,7 @@ export const supabaseAdmin =
 
 
 const upsertProductRecord = async (product: Stripe.Product) => {
+  console.log(product)
   const productData: Product = {
     id: product.id,
     active: product.active,

@@ -9,7 +9,6 @@ export const getLikedSongs = async (): Promise<Song[]> => {
 
     // Use getUser to get the authenticated user
     const { data: { user }, error: userError } = await supabase.auth.getUser();
-
     // Handle user error or missing user
     if (userError) {
         console.log(userError.message);

@@ -11,7 +11,6 @@ interface LikeButtonProps {
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({ songId }) => {
-  console.log(songId);
   const router = useRouter();
   const { supabaseClient } = useSessionContext();
   const authModal = useAuthModal();
