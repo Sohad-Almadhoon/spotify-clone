@@ -1,4 +1,3 @@
-"use client";
 import { User } from "@supabase/auth-helpers-nextjs";
 import {
   useSessionContext,
@@ -46,13 +45,13 @@ export const MyUserContextProvider = (props: Props) => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   //* Define functions to get user details and subscription from Supabase
-  console.log(subscription);
   const getUserDetails = () => supabase.from("users").select("*").single();
   const getSubscription = () =>
     supabase
       .from("subscriptions")
-      .select("*, prices(*)")
-      .in("status", ["trialing", "active"]);
+      .select("*,  prices(*, products!prices_product_id_fkey(*))")
+      .in("status", ["trialing", "active"])
+      .single();
 
   //* Fetch user info
   useEffect(() => {
@@ -76,20 +75,15 @@ export const MyUserContextProvider = (props: Props) => {
 
           //* If the subscription promise is fulfilled, set the subscription state
           if (subscriptionPromise.status === "fulfilled") {
-            console.log(subscriptionPromise.value, "Fulifilled");
-            const subscriptionData = subscriptionPromise.value?.data as any[]; // data is an array
-            if (subscriptionData && subscriptionData.length > 0) {
-              setSubscription(subscriptionData[0] as Subscription); // Set the first subscription if it exists
-            } else {
-              setSubscription(null); // Handle the case where no subscription is found
-            }
+            setSubscription(subscriptionPromise.value?.data as Subscription);
           } else {
+            //! Log an error if the promise for subscriptions is rejected
             console.error(subscriptionPromise.reason);
           }
 
           setIsLoadingData(false);
         }
-      ); 
+      );
     } else if (!user && !isLoadingUser && !isLoadingData) {
       //* If user does not exist and data is not loading, reset user details and subscription
       setUserDetails(null);

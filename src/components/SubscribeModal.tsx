@@ -56,6 +56,7 @@ const SubscribeModal: React.FC<subscribeModalProps> = ({ products }) => {
         url: "/api/create-checkout-session",
         data: { price },
       });
+      console.log("Session", sessionId)
       const stripe = await getStripe();
       if (stripe) {
         const { error } = await stripe.redirectToCheckout({ sessionId });
